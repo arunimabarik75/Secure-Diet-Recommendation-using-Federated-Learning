@@ -20,17 +20,13 @@ if __name__ == "__main__":
     # Define Flower client
     class MyClient(fl.client.NumPyClient):
         
-        MyClient()
-        {
+        def __init__(self):
             train_data = data.load_data("train_" + client_id)
-            test_data = data.load_data("test_")
-
+            test_data = data.load_data("test")
             self.x_train = train_data.drop("calories_to_maintain_weight", axis=1)
             self.y_train = train_data["calories_to_maintain_weight"]
-
             self.x_test = test_data.drop("calories_to_maintain_weight", axis=1)
             self.y_test = test_data["calories_to_maintain_weight"]
-        }
 
         def get_parameters(self, config):
             return utils.get_model_parameters(model)
@@ -43,12 +39,12 @@ if __name__ == "__main__":
                 model.fit(self.x_train, self.y_train)
 
             print(f"Training finished for round {config['server_round']}")
-            return utils.get_model_parameters(model), len(x_train), {}
+            return utils.get_model_parameters(model), len(self.x_train), {}
 
         def evaluate(self, parameters, config):
             utils.set_model_params(model, parameters)
             loss = mean(self.y_test, model.predict(self.x_test))
-            return loss, len(X_test), {}
+            return loss, len(self.x_test), {}
 
     # Start Flower client
     fl.client.start_numpy_client(server_address="localhost:8080", client=MyClient())

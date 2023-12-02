@@ -3,7 +3,7 @@
 # Server
 echo "Starting server...."
 python server.py &
-sleep 3  
+sleep 3
 
 # 2 Clients
 echo "Starting client 1...."

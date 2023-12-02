@@ -38,9 +38,18 @@ def set_initial_params(model: LinearRegression):
     """
 
     n_features = 7
-    model.coef_ = 0
+    model.coef_ = np.zeros((n_features,))
+    model.feature_names_in_ = np.array([
+        "age",
+        "weight(kg)",
+        "height(m)",
+        "gender",
+        "BMI",
+        "BMR",
+        "activity_level",
+    ])   
     if model.fit_intercept:
-        model.intercept_ = np.zeros((n_features,))
+        model.intercept_ = np.zeros((1,))
 
 # def shuffle(X: np.ndarray, y: np.ndarray) -> XY:
 #     """Shuffle X and y."""
@@ -49,8 +58,8 @@ def set_initial_params(model: LinearRegression):
 #     return X[idx], y[idx]
 
 
-def partition(X: np.ndarray, y: np.ndarray, num_partitions: int) -> XYList:
-    """Split X and y into a number of partitions."""
-    return list(
-        zip(np.array_split(X, num_partitions), np.array_split(y, num_partitions))
-    )
+# def partition(X: np.ndarray, y: np.ndarray, num_partitions: int) -> XYList:
+#     """Split X and y into a number of partitions."""
+#     return list(
+#         zip(np.array_split(X, num_partitions), np.array_split(y, num_partitions))
+#     )
