@@ -6,10 +6,11 @@ python server.py &
 sleep 3  
 
 # 2 Clients
-for i in `seq 0 1`; do
-    echo "Starting client $i...."
-    python client.py &
-done
+echo "Starting client 1...."
+python client.py 1 &
+    
+echo "Starting client 2...."
+python client.py 2 &
 
 # Use CTRL + C to stop all background processes
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM

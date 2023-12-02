@@ -1,49 +1,54 @@
 import warnings
 import flwr as fl
 import numpy as np
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import log_loss
-
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error as mean
+import data
 import utils
+import sys
 
 if __name__ == "__main__":
-    # Load MNIST dataset from https://www.openml.org/d/554
-    (X_train, y_train), (X_test, y_test) = utils.load_mnist()
+    # Get client id from command line
+    client_id = str(sys.argv[1])
 
-    # Split train set into 10 partitions and randomly use one for training.
-    partition_id = np.random.choice(10)
-    (X_train, y_train) = utils.partition(X_train, y_train, 10)[partition_id]
+    # Create LinearRegression Model
+    model = LinearRegression()
 
-    # Create LogisticRegression Model
-    model = LogisticRegression(
-        penalty="l2",
-        max_iter=1,  # local epoch
-        warm_start=True,  # prevent refreshing weights when fitting
-    )
-
-    # Setting initial parameters, akin to model.compile for keras models
+    # Setting initial parameters
     utils.set_initial_params(model)
 
     # Define Flower client
-    class MnistClient(fl.client.NumPyClient):
-        def get_parameters(self, config):  # type: ignore
+    class MyClient(fl.client.NumPyClient):
+        
+        MyClient()
+        {
+            train_data = data.load_data("train_" + client_id)
+            test_data = data.load_data("test_")
+
+            self.x_train = train_data.drop("calories_to_maintain_weight", axis=1)
+            self.y_train = train_data["calories_to_maintain_weight"]
+
+            self.x_test = test_data.drop("calories_to_maintain_weight", axis=1)
+            self.y_test = test_data["calories_to_maintain_weight"]
+        }
+
+        def get_parameters(self, config):
             return utils.get_model_parameters(model)
 
-        def fit(self, parameters, config):  # type: ignore
+        def fit(self, parameters, config):
             utils.set_model_params(model, parameters)
-            # Ignore convergence failure due to low local epochs
+
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
-                model.fit(X_train, y_train)
-            print(f"Training finished for round {config['server_round']}")
-            return utils.get_model_parameters(model), len(X_train), {}
+                model.fit(self.x_train, self.y_train)
 
-        def evaluate(self, parameters, config):  # type: ignore
+            print(f"Training finished for round {config['server_round']}")
+            return utils.get_model_parameters(model), len(x_train), {}
+
+        def evaluate(self, parameters, config):
             utils.set_model_params(model, parameters)
-            loss = log_loss(y_test, model.predict_proba(X_test))
-            accuracy = model.score(X_test, y_test)
-            return loss, len(X_test), {"accuracy": accuracy}
+            loss = mean(self.y_test, model.predict(self.x_test))
+            return loss, len(X_test), {}
 
     # Start Flower client
-    fl.client.start_numpy_client(server_address="localhost:8080", client=MnistClient())
+    fl.client.start_numpy_client(server_address="localhost:8080", client=MyClient())
