@@ -1,4 +1,5 @@
 import flwr as fl
+import pickle
 import data
 import utils
 from sklearn.linear_model import LinearRegression
@@ -45,3 +46,6 @@ if __name__ == "__main__":
         strategy=strategy,
         config=fl.server.ServerConfig(num_rounds=5),
     )
+    # Pickle model for future use
+    filename = "global_model.sav"
+    pickle.dump(model, open(filename, "wb"))
