@@ -10,9 +10,9 @@ Age, Height, Weight, Gender and Activity Level
 ### Machine Learning 
 #### Model Training
 1. Clone the repository
-  ```
-  git clone https://github.com/arunimabarik75/Secure-Diet-Recommendation-using-Federated-Learning.git
-  ```
+   ```
+   git clone https://github.com/arunimabarik75/Secure-Diet-Recommendation-using-Federated-Learning.git
+   ```
 
 2. Open Federated_Linear_Regression directory
    ```
@@ -25,26 +25,30 @@ Age, Height, Weight, Gender and Activity Level
    ```
    
 4. Enter virtual environment
+
    Windows ``` venv\Scripts\activate ```
+
    Linux ``` source venv/bin/activate ```
 
-5. Install all dependencies
+6. Install all dependencies
    ```
    pip install -r requirements.txt
    ```
 
-6. Start server
+7. Start server
    ```
    python server.py
    ```
 
-7. Start client
+8. Start client
    ```
    python client.py 1
    ```
-   Replace 1 with the number of each client. Each client should have a personal dataset to train on (here calories_train_1.csv ...) and a common test dataset (here calories_test).
+   Replace 1 with the number of each client.
 
-8. Global model parameters saved in global_model.sav
+   Each client should have a personal dataset to train on (here calories_train_1.csv ...) and a common test dataset for all clients (here calories_test.csv).
+
+10. Global model parameters saved in global_model.sav
 
 #### Model Prediction
 Use the model saved in global_model.sav to predict healthy calorie intake.
@@ -58,4 +62,5 @@ recipes.csv - https://www.kaggle.com/datasets/irkaal/foodcom-recipes-and-reviews
 
 ### Machine Learning
 Nearest Neighbor algorithm suggests 15 recipes based on the calories predicted (5 recipes each for breakfast, lunch and dinner)
-Full implementation in - Recommend_Diet_Nearest_Neighbors.ipynb 
+
+Full implementation - Recommend_Diet_Nearest_Neighbors.ipynb 
